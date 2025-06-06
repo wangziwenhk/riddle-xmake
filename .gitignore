@@ -1,0 +1,5 @@
+riddlec.exe
+xmake.lua
+.vscode/
+.xmake/
+!plugins/riddle/xmake.lua
