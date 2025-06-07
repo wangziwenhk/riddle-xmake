@@ -4,15 +4,17 @@ rule("riddle")
         local objectdir = target:objectdir()
         local objectfile = path.join(objectdir, path.basename(sourcefile) .. ".exe")
         os.mkdir(path.directory(objectfile))
+        
         local argv = {}
         table.insert(argv, "riddlec")
-        for _, includedir in ipairs(target:get("includedirs")) do
-            table.insert(argv, "-I" .. includedir)
-        end
 
         table.insert(argv, sourcefile)
         table.insert(argv, "-o")
         table.insert(argv, objectfile)
+
+        for _, flag in ipairs(target:get("ridflags") or {}) do
+            table.insert(argv, flag)
+        end
     
         os.vrunv("riddlec", table.slice(argv, 2))
         
