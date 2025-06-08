@@ -9,17 +9,21 @@ rule("riddle")
         os.mkdir(path.directory(objectfile))
         local argv = {"-c", sourcefile, "-o", objectfile}
         table.join2(argv, target:get("ridflags") or {})
+
+        target:add("objectfiles",objectfile)
+
         os.vrunv("riddlec", argv)
         return objectfile
     end)
 
     on_link(function (target, opt)
-        local objectfiles = target:objectfiles()
+        local objectfiles = target:get("objectfiles")
+        
         if #objectfiles == 0 then
             return
         end
         local argv = {"-o", target:targetfile()}
         table.join2(argv, target:get("ridflags") or {})
         table.join2(argv, objectfiles)
-        os.vrunv("riddlec", argv)
+        os.vrunv("clang", argv)
     end)
